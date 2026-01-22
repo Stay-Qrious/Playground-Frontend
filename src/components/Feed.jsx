@@ -47,7 +47,7 @@ const Feed = () => {
     return (
       <div className="flex justify-center my-20">
         <div className="text-center p-10 bg-[#1e293b] rounded-3xl border border-slate-700 shadow-xl">
-          <h1 className="font-bold text-2xl text-white mb-2">No More Developers!</h1>
+          <h1 className="font-bold text-2xl text-white mb-2">No More Players!</h1>
           <p className="text-slate-400">You've seen everyone in your area. Check back later.</p>
         </div>
       </div>

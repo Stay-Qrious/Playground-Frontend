@@ -33,7 +33,7 @@ const UserCard = ({ user }) => {
           <h2 className="text-2xl font-bold text-white leading-tight">
             {firstName} {lastName}
           </h2>
-          <p className="text-slate-400 text-sm font-semibold">{age ? `${age} Years Old` : "Developer"}</p>
+          <p className="text-slate-400 text-sm font-semibold">{age ? `${age} Years Old` : "Player"}</p>
         </div>
       </figure>
 
