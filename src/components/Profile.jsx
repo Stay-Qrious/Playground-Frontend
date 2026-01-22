@@ -21,7 +21,7 @@ const Profile = () => {
         withCredentials: true,
       });
 
-      dispatch(setUser(res.data));
+      dispatch(setUser(res.data.data));
     } catch (e) {
       if (e.response?.status === 401) {
         navigate("/login");   

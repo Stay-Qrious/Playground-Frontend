@@ -21,8 +21,8 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      console.log("Response:", res.data);
-      dispatch(setUser(res.data));
+      console.log("Response:", res.data.data);
+      dispatch(setUser(res.data.data));
       navigate("/feed");
     } catch (err) {
       console.error("Authentication failed:", err);
