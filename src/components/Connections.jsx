@@ -3,6 +3,8 @@ import { BaseURL } from '../utils/constants'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addConnections } from '../utils/connectionsSlice';
+import { Link } from 'react-router-dom';
+
 
 
 const Connections = () => {
@@ -55,6 +57,12 @@ const Connections = () => {
                 {connection.firstName} {connection.lastName}
               </h2>
             </div>
+
+            <Link to={`/chat/${connection._id}`}>
+              <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                Chat
+              </button>
+            </Link>
           </div>
         ))}
       </div>
