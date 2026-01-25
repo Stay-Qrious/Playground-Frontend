@@ -28,10 +28,10 @@ const Footer = () => {
         {/* Professional Links */}
         <div className="flex items-center gap-8">
           {[
-            { img: LinkedinLogo, url: "https://www.linkedin.com/in/abhishektripathi-stayqrious/", label: "LinkedIn" },
-            { img: GithubLogo, url: "https://github.com/Stay-Qrious", label: "GitHub" },
-            { img: LeetcodeLogo, url: "https://leetcode.com/u/abhi_tripathi/", label: "LeetCode" },
-            { img: InstagramLogo, url: "https://www.instagram.com/abhi_tripathi085/", label: "Instagram" }
+            { img: LinkedinLogo, url: "https://www.linkedin.com/in/abhishektripathi-stayqrious/" },
+            { img: GithubLogo, url: "https://github.com/Stay-Qrious" },
+            { img: LeetcodeLogo, url: "https://leetcode.com/u/abhi_tripathi/" },
+            { img: InstagramLogo, url: "https://www.instagram.com/abhi_tripathi085/"}
           ].map((social, index) => (
             <a
               key={index}

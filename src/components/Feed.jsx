@@ -43,7 +43,7 @@ const Feed = () => {
       style={{ backgroundImage: `url(${FeedBg})` }}
     >
       {/* STEP 3: Add a subtle overlay so the UserCard is easy to read */}
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] pointer-events-none"></div>
+      <div className="absolute inset-0 bg-black/30  pointer-events-none"></div>
 
       {feed.length === 0 ? (
         <div className="z-10 text-center p-10 bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl max-w-md mx-4">
