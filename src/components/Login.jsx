@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../utils/userSlice";
 import { BaseURL } from "../utils/constants";
+import SignUpImg from "../images/SignUp.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,125 +12,131 @@ const Login = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
-  
-  // FIX 1: Defined the missing error state
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async () => {
-    try {
-      setError(""); // Clear previous errors
-      const res = await axios.post(
-        BaseURL + "/login",
-        { email, password },
-        { withCredentials: true }
-      );
-      // We use the cleaned data (firstName, lastName, etc.) from your new backend
-      dispatch(setUser(res.data.data)); 
-      navigate("/feed");
-    } catch (err) {
-      console.error("Authentication failed:", err);
-      // FIX 2: Correctly accessing error message from your Backend response
-      setError(err.response?.data || "Something went wrong");
-    }
-  };
-
-  const handleSignup = async () => {
+  const handleAuth = async () => {
     try {
       setError("");
+      const endpoint = isLoginForm ? "/login" : "/signup";
+      const payload = isLoginForm
+        ? { email, password }
+        : { firstName, lastName, email, password };
+
       const res = await axios.post(
-        BaseURL + "/signup",
-        { firstName, lastName, email, password },
+        BaseURL + endpoint,
+        payload,
         { withCredentials: true }
       );
-      dispatch(setUser(res.data.data));
-      navigate("/profile");
+
+      dispatch(setUser(res.data.data || res.data));
+      navigate(isLoginForm ? "/feed" : "/profile");
     } catch (err) {
-      console.error("Signup failed:", err);
-      setError(err.response?.data || "Something went wrong");
+      setError(err.response?.data || "Authentication failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="card bg-base-100 w-96 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title flex justify-center">
-            {isLoginForm ? "Login" : "Sign Up"}
-          </h2>
+    <div
+      className="flex justify-center items-center h-screen bg-cover bg-center transition-all duration-500"
+      style={{ backgroundImage: `url(${SignUpImg})` }}
+    >
+      {/* Darker Overlay for better contrast */}
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/30 to-black/60 backdrop-blur-[2px]"></div> */}
 
-          {/* FIX 3: Added a visual error message for the user */}
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {/* Glassmorphic Card */}
+      <div className="card w-full max-w-md shadow-2xl bg-white/10 backdrop-blur border border-white/20 z-10 mx-4">
+        <div className="card-body p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">
+              {isLoginForm ? "Welcome Back" : "Join the Arena"}
+            </h2>
+            <p className="text-white/70 mt-2 text-sm">
+              {isLoginForm ? "Enter your credentials to play" : "Create your account to start playing"}
+            </p>
+          </div>
 
-          {!isLoginForm && (
-            <div className="flex space-x-4">
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend text-lg">First Name</legend>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </fieldset>
-
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend text-lg">Last Name</legend>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </fieldset>
+          {error && (
+            <div className="alert alert-error py-2 mb-4 bg-red-500/80 text-white border-none text-sm animate-bounce">
+              <span>{error}</span>
             </div>
           )}
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-lg">Email</legend>
-            <input
-              type="text"
-              className="input"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </fieldset>
+          <div className="space-y-4">
+            {!isLoginForm && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label py-1"><span className="label-text text-white font-semibold">First Name</span></label>
+                  <input
+                    type="text"
+                    className="input input-bordered bg-white/10 text-white placeholder:text-white/40 focus:border-primary border-white/20"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label py-1"><span className="label-text text-white font-semibold">Last Name</span></label>
+                  <input
+                    type="text"
+                    className="input input-bordered bg-white/10 text-white placeholder:text-white/40 focus:border-primary border-white/20"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
 
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-lg">Password</legend>
-            <input
-              type="password"
-              className="input"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </fieldset>
+            {/* Email Field */}
+            <div className="form-control grid grid-cols-4 items-center gap-4">
+              <label className="label justify-start col-span-1 py-1">
+                <span className="label-text text-white font-semibold text-lg">Email</span>
+              </label>
+              <input
+                type="email"
+                className="input input-bordered bg-white/10 text-white placeholder:text-white/40 focus:border-primary border-white/20 col-span-3 w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-          <div className="card-actions justify-end">
+            {/* Password Field */}
+            <div className="form-control grid grid-cols-4 items-center gap-4">
+              <label className="label justify-start col-span-1 py-1">
+                <span className="label-text text-white font-semibold text-lg">Password</span>
+              </label>
+              <input
+                type="password"
+                className="input input-bordered bg-white/10 text-white placeholder:text-white/40 focus:border-primary border-white/20 col-span-3 w-full"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="mt-8">
             <button
-              className="btn btn-primary"
-              onClick={isLoginForm ? handleLogin : handleSignup}
+              className="btn btn-primary w-full text-lg font-bold shadow-lg transform transition-all active:scale-95 hover:scale-[1.02]"
+              onClick={handleAuth}
             >
-              {isLoginForm ? "Login" : "Sign Up"}
+              {isLoginForm ? "Log In" : "Sign Up Now"}
             </button>
           </div>
-          <div className="mt-4 text-center">
+
+          <div className="divider divider-neutral text-white/30 before:bg-white/10 after:bg-white/10 text-xs">OR</div>
+
+          <div className="text-center">
             <button
-              className="text-blue-500 hover:underline"
+              className="text-white hover:text-primary transition-colors font-medium text-sm"
               onClick={() => {
                 setIsLoginForm(!isLoginForm);
-                setError(""); // Clear error when switching forms
+                setError("");
               }}
             >
               {isLoginForm
-                ? "Create an account"
-                : "Already have an account? Login"}
+                ? "Don't have an account? Sign Up"
+                : "Already a member? Log In"}
             </button>
           </div>
         </div>

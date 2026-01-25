@@ -5,62 +5,62 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setFeed } from '../utils/feedSlice'
 import UserCard from './UserCard'
 
+// STEP 1: Import your creative sports image
+import FeedBg from "../images/Feed.jpg"; 
+
 const Feed = () => {
   const dispatch = useDispatch();
-  
-  // Get feed and user from store
   const feed = useSelector((store) => store.feed);
   const user = useSelector((store) => store.user);
 
   const getFeed = async () => {
-    // If we already have items in the feed, don't fetch again
     if (feed && feed.length > 0) return;
-
     try {
       const res = await axios.get(BaseURL + "/feed", { withCredentials: true });
-      // Dispatch the data array to the store
       dispatch(setFeed(res.data?.data || res.data));
-    }
-    catch (e) {
+    } catch (e) {
       console.error("Error fetching feed:", e.message);
     }
   }
 
   useEffect(() => {
-    // We only fetch the feed if a user is actually logged in
-    if (user) {
-      getFeed();
-    }
-  }, [user]); // Trigger whenever 'user' state changes (login/signup)
+    if (user) { getFeed(); }
+  }, [user]);
 
-  // 1. If feed hasn't been fetched yet
+  // Loading State
   if (!feed) {
     return (
-      <div className="flex justify-center my-40">
-        <span className="loading loading-dotted loading-lg text-indigo-500"></span>
+      <div className="flex justify-center items-center h-screen bg-[#0f172a]">
+        <span className="loading loading-dotted loading-lg text-primary"></span>
       </div>
     );
   }
 
-  // 2. If feed was fetched but is empty
-  if (feed.length === 0) {
-    return (
-      <div className="flex justify-center my-20">
-        <div className="text-center p-10 bg-[#1e293b] rounded-3xl border border-slate-700 shadow-xl">
-          <h1 className="font-bold text-2xl text-white mb-2">No More Players!</h1>
-          <p className="text-slate-400">You've seen everyone in your area. Check back later.</p>
-        </div>
-      </div>
-    );
-  }
-
-  // 3. Show the first user in the feed
+  // STEP 2: Apply the background to the main return
   return (
-    <div className="flex justify-center my-10">
-      {/* We pass a handler to the card so it can trigger the 
-         next card by updating the Redux store 
-      */}
-      <UserCard user={feed[0]} />
+    <div 
+      className="min-h-screen bg-cover bg-center bg-fixed flex flex-col items-center pt-10 pb-40"
+      style={{ backgroundImage: `url(${FeedBg})` }}
+    >
+      {/* STEP 3: Add a subtle overlay so the UserCard is easy to read */}
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] pointer-events-none"></div>
+
+      {feed.length === 0 ? (
+        <div className="z-10 text-center p-10 bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl max-w-md mx-4">
+          <h1 className="font-bold text-2xl text-white mb-2">No More Players!</h1>
+          <p className="text-white/60">You've seen everyone in your area. Check back later.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn btn-primary mt-6 rounded-full"
+          >
+            Refresh Arena
+          </button>
+        </div>
+      ) : (
+        <div className="z-10 w-full flex justify-center px-4">
+          <UserCard user={feed[0]} />
+        </div>
+      )}
     </div>
   );
 }

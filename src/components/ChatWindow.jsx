@@ -4,13 +4,13 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const ChatWindow = () => {
-  const [messages, setMessages] = useState([]); // State to store chat history
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((state) => state.user);
   const { targetUserId } = useParams();
   const userId = user?._id;
 
-  // We'll store the socket in a variable to use it across the component
+
   const [socket, setSocket] = useState(null);
 
   const handleSendMessage = () => {
@@ -38,7 +38,7 @@ const ChatWindow = () => {
     });
 
     socketConn.on("messageReceived", ({ firstName, userId: msgUserId, message }) => {
-      // Append new message to the state array
+   
       setMessages((prev) => [...prev, { firstName, userId: msgUserId, message }]);
     });
 
