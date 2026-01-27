@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import createSocketConnection from "../utils/socket";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { BaseURL } from "../utils/constants";
+import axios from "axios";
 
 const ChatWindow = () => {
   const [messages, setMessages] = useState([]); // State to store chat history
@@ -12,6 +14,25 @@ const ChatWindow = () => {
 
   // We'll store the socket in a variable to use it across the component
   const [socket, setSocket] = useState(null);
+
+  const fetchChatMessages = async () => {
+    try {
+      const chat = await axios.get(BaseURL + `/chat/${targetUserId}`, { withCredentials: true });
+      const chatMessages = chat?.data?.messages.map(msg => {
+        return {
+          firstName: msg.senderId.firstName,
+          userId: msg.senderId._id,
+          message: msg.text
+        }
+      });
+      setMessages(chatMessages || []);
+
+    } catch (err) {
+      console.error("Error fetching chat messages:", err.message);
+    }
+
+  };
+
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !socket) return;
@@ -24,6 +45,10 @@ const ChatWindow = () => {
     });
     setNewMessage("");
   };
+
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
 
   useEffect(() => {
     if (!userId) return;
@@ -47,7 +72,7 @@ const ChatWindow = () => {
 
   return (
     <div className="flex flex-col h-[600px] w-full max-w-2xl mx-auto bg-base-200 shadow-2xl rounded-2xl overflow-hidden border border-base-300">
-      
+
       {/* 1. Header */}
       <div className="bg-base-300 p-4 border-b border-base-300">
         <h2 className="text-xl font-bold text-center italic">Playground Chat</h2>
@@ -56,23 +81,22 @@ const ChatWindow = () => {
       {/* 2. Chat History Area (Dynamic) */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {messages.map((msg, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className={`chat ${msg.userId === userId ? "chat-end" : "chat-start"}`}
           >
             <div className="chat-header opacity-50 text-xs mb-1">
               {msg.firstName}
             </div>
-            <div className={`chat-bubble shadow-md ${
-              msg.userId === userId 
-                ? "chat-bubble-primary" 
-                : "chat-bubble-secondary"
-            }`}>
+            <div className={`chat-bubble shadow-md ${msg.userId === userId
+              ? "chat-bubble-primary"
+              : "chat-bubble-secondary"
+              }`}>
               {msg.message}
             </div>
           </div>
         ))}
-        
+
         {/* Empty state if no messages */}
         {messages.length === 0 && (
           <div className="text-center mt-10 opacity-30 italic">
