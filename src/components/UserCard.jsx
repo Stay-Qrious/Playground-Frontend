@@ -44,7 +44,13 @@ const UserCard = ({ user }) => {
         className="card w-full max-w-sm bg-white/10 backdrop-blur-xl shadow-2xl rounded-[2.5rem] overflow-hidden border border-white/20 min-h-[600px] mb-10"
       >
         <figure className="relative h-80 w-full overflow-hidden">
-          <img src={photoUrl || "https://via.placeholder.com/400"} alt="Profile" className="w-full h-full object-cover" />
+          <img
+  src={photoUrl || "https://via.placeholder.com/400"}
+  alt="Profile"
+  className="w-full h-full object-contain bg-transparent"
+
+/>
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
           <div className="absolute bottom-6 left-8">
             <h2 className="text-3xl font-black text-white uppercase italic">{firstName} {lastName}</h2>
