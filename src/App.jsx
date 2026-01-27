@@ -8,7 +8,8 @@ import Feed from "./components/Feed";
 import Incorrect from "./components/Incorrect";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
-import ChatWindow from "./components/chatWindow";
+import ChatWindow from "./components/ChatWindow";
+
 
 
 function App() {
